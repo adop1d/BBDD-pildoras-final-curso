@@ -1,7 +1,6 @@
 package org.beast.gui;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class bbddGraphicalFrame extends JFrame {
     public bbddGraphicalFrame(){
