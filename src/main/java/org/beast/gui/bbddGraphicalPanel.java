@@ -39,7 +39,7 @@ public class bbddGraphicalPanel extends JPanel {
 
         try{
             DatabaseMetaData dataDDBB=coneccion.getMetaData();
-            myResultSet=dataDDBB.getTables("demo",null,null,null);
+            myResultSet=dataDDBB.getTables(null,null,null,null);
 
             while(myResultSet.next()){
                 resourceFinder.addItem(myResultSet.getString("TABLE_NAME"));

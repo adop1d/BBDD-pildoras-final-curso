@@ -10,6 +10,6 @@ public class Main {
         vista.setVisible(true);
         vista.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        System.out.println("Just adding a few things");
+        System.out.println("working on it");
     }
 }
