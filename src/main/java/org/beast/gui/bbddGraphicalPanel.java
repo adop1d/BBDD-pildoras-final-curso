@@ -1,10 +1,12 @@
 package org.beast.gui;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
@@ -37,8 +39,23 @@ public class bbddGraphicalPanel extends JPanel {
         coneccion=null;
         String data[]=new String[3];
 
-        try{entry = new FileReader
-                ("src/main/java/config.txt");
+        try {
+            entry = new FileReader
+                    ("src/main/java/confikg.txt");
+        }catch (IOException e){
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter=new FileNameExtensionFilter("text file","txt");
+            chooser.setFileFilter(filter);
+            int returnVal = chooser.showOpenDialog(this);
+
+            if(returnVal==JFileChooser.APPROVE_OPTION) {
+                try {
+                    entry=new FileReader(chooser.getSelectedFile().getAbsolutePath());
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            try{
             BufferedReader bufferedReader = new BufferedReader(entry);
 
             for (int i = 0; i <=2 ; i++)
@@ -47,12 +64,13 @@ public class bbddGraphicalPanel extends JPanel {
             coneccion=DriverManager.getConnection(data[0],data[1],data[2]);
 
         entry.close();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
         }
-        catch (IOException e){
-            JOptionPane.showMessageDialog(this,"no se ha encontrado la conexión");
-        }
-        catch (Exception e)
-        {System.out.println(e.getMessage());}
     }
 
     public void getTables(){
