@@ -1,0 +1,3 @@
+jdbc:postgresql://localhost:9292/demo
+postgres
+12345678

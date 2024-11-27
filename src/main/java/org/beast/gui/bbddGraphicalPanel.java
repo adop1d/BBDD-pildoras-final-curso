@@ -4,15 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class bbddGraphicalPanel extends JPanel {
     public bbddGraphicalPanel(){
         setLayout(new BorderLayout());
+        setBackground(new Color(60,60,60));
 
         resourceFinder=new JComboBox();
         resourceInfo=new JTextArea();
+        resourceInfo.setBackground(new Color(60,60,60));
+        resourceInfo.setForeground(new Color(240,240,240));
 
         wireToDataBase();
         getTables();
@@ -29,9 +35,24 @@ public class bbddGraphicalPanel extends JPanel {
     }
     public void wireToDataBase(){
         coneccion=null;
+        String data[]=new String[3];
 
-        try{coneccion=DriverManager.getConnection("jdbc:postgresql://localhost:9292/demo","postgres","12345678");}
-        catch (Exception e){System.out.println(e.getMessage());}
+        try{entry = new FileReader
+                ("src/main/java/config.txt");
+            BufferedReader bufferedReader = new BufferedReader(entry);
+
+            for (int i = 0; i <=2 ; i++)
+            {data[i]=bufferedReader.readLine();}
+
+            coneccion=DriverManager.getConnection(data[0],data[1],data[2]);
+
+        entry.close();
+        }
+        catch (IOException e){
+            JOptionPane.showMessageDialog(this,"no se ha encontrado la conexión");
+        }
+        catch (Exception e)
+        {System.out.println(e.getMessage());}
     }
 
     public void getTables(){
@@ -61,24 +82,21 @@ public class bbddGraphicalPanel extends JPanel {
             ResultSet myResultSet=statement.executeQuery(consultation);
             ResultSetMetaData resultSetDataBase=myResultSet.getMetaData();
 
-            for (int i = 1; i <=resultSetDataBase.getColumnCount(); i++) {
+            for (int i = 1; i <=resultSetDataBase.getColumnCount(); i++)
+            {fields.add(resultSetDataBase.getColumnLabel(i));}
 
-                fields.add(resultSetDataBase.getColumnLabel(i));
-            }
             while (myResultSet.next()){
-                for(String fieldName:fields){
-                    resourceInfo.append(myResultSet.getString(fieldName)+" ");
-                }
+                for(String fieldName:fields)
+                {resourceInfo.append(myResultSet.getString(fieldName)+" ");}
+
                 resourceInfo.append("\n");
             }
-
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-
     }
-
     private JComboBox resourceFinder;
     private JTextArea resourceInfo;
     private Connection coneccion;
+    private FileReader entry;
 }
